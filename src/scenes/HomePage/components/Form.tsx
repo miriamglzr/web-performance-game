@@ -1,7 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import { PhoneNumber, PhoneNumberUtil } from "google-libphonenumber";
 import DatePicker from "react-datepicker";
-import moment from "moment";
 import { useState } from "react";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -10,21 +9,17 @@ import dayjs from "dayjs";
 
 function daysUntilBirthday(date: Date) {
 	const today = dayjs();
-	console.log(today);
-	console.log(today.diff(date, "day"));
 	const m2 = dayjs(date);
 
-	const m1 = moment(date);
-	console.log(m1);
-	console.log(m2);
-	m1.set({ year: moment().year() });
-	if (m1.isBefore(moment())) {
-		m1.add(1, "y");
+	if (m2.isBefore(today)) {
+		m2.add(1, "y");
 	}
-	return m1.diff(moment(), "days");
+	return m2.diff(today, "days");
 }
 
-function validatePhoneNumber(value: string) {
+async function validatePhoneNumber(value: string) {
+	console.log(value);
+	await import("google-libphonenumber").then(() => console.log(value));
 	const instance = PhoneNumberUtil.getInstance();
 	try {
 		const phoneNumber = instance.parseAndKeepRawInput(value, "IS");
@@ -45,17 +40,17 @@ export const Form = () => {
 	} = useForm();
 
 	const birthday = watch("birthday");
-	const onSubmit = handleSubmit((data) => console.log(data));
+	const onSubmit = handleSubmit((data: any) => console.log(data));
 
-	const handleChange = (event: any) => {
-		console.log(event.target.value);
-		event.preventDefault();
-		if (!importedLibrary) {
-			import("google-libphonenumber").then(() => {
-				setImportedLibrary(true);
-			});
-		}
-	};
+	// let phoneNumberPromise = null
+	// function getLibPhoneNumber() {
+	//   if (!phoneNumberPromise) {
+	//     phoneNumberPromise = import('google-libphonenumber').then((lib) =>
+	//       lib.PhoneNumberUtil.getInstance()
+	//     )
+	//   }
+	//   return phoneNumberPromise
+	// }
 
 	return (
 		<section className={s.form}>
@@ -85,13 +80,13 @@ export const Form = () => {
 				<div>
 					<label>Phone number</label>
 					<input
-						onChange={(event) => handleChange(event)}
+						onFocus={(event) => validatePhoneNumber(event.target.value)}
 						className={s.input}
 						type="tel"
-						// {...register("phoneNumber", {
-						// 	required: true,
-						// 	validate: validatePhoneNumber,
-						// })}
+						{...register("phoneNumber", {
+							required: true,
+							validate: validatePhoneNumber,
+						})}
 					/>
 					{errors.phoneNumber && (
 						<p className={s.error}>
