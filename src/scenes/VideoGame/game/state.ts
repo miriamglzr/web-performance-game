@@ -74,7 +74,8 @@ export function addEntity(state: GameState, entity: Entity) {
  */
 export function killEntity(entity: Entity) {
 	entity.dead = true;
-	entity.el.remove();
+	//change opacity instead of removing the element
+	entity.el.style.opacity = "0";
 }
 
 /**

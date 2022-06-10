@@ -198,7 +198,7 @@ function checkCollisions(state: GameState, delta: number) {
 	// Filter dead entities.
 	if (didCollide) {
 		didCollide = false;
-		removeDeadEntities(state);
+
 		updateUI(state, delta);
 		checkEndLevel(state);
 	}
@@ -269,7 +269,8 @@ function checkEndLevel(state: GameState) {
 	if (enemiesRemaining) {
 		return;
 	}
-
+	//if no enemies remaining clean up dead entities
+	removeDeadEntities(state);
 	// Calculate some stats for the modal.
 	const accuracy = state.enemyCount / state.shotCount;
 	const accuracyPretty = Math.round(accuracy * 100);
