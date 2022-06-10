@@ -25,6 +25,7 @@ export const initialState = (): GameState => {
 		lastSpawnTime: 0,
 		modalTime: 0,
 		isGameOver: false,
+		isGameInit: true,
 	};
 };
 
@@ -50,6 +51,7 @@ export const restartGame = (state: GameState) => {
 		shotCount,
 		enemyCount,
 		isGameOver,
+		isGameInit: true,
 		modalTime: 1,
 	});
 };
@@ -89,5 +91,4 @@ export function killAllEntities(state: GameState) {
  */
 export function removeDeadEntities(state: GameState) {
 	state.entities = state.entities.filter((entity) => !entity.dead);
-	console.log(state.entities);
 }

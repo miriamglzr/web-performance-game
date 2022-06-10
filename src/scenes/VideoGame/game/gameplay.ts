@@ -32,11 +32,13 @@ export function update(state: GameState, updateTime: number) {
 
 	// Check if there are collisions, either between entities (shots and enemies) or between entities
 	// and the screen boundaries.
-	checkCollisions(state);
+	checkCollisions(state, delta);
 
 	// Update some misc UI elements.
-
-	updateUI(state, delta);
+	if (state.isGameInit || (state.isGameOver && state.modalTime <= 0)) {
+		updateUI(state, delta);
+		state.isGameInit = false;
+	}
 }
 
 /**
@@ -133,7 +135,7 @@ function updateEntities(state: GameState, updateTime: number, delta: number) {
 /**
  * Collision detection. How fun!
  */
-function checkCollisions(state: GameState) {
+function checkCollisions(state: GameState, delta: number) {
 	const windowHeight = window.innerHeight;
 	const windowWidth = window.innerWidth;
 	let didCollide = false;
@@ -187,8 +189,6 @@ function checkCollisions(state: GameState) {
 					killEntity(entityA);
 					killEntity(entityB);
 					state.score += scoreFromEnemy(entityB);
-
-					checkEndLevel(state);
 					didCollide = true;
 				}
 			});
@@ -197,8 +197,10 @@ function checkCollisions(state: GameState) {
 
 	// Filter dead entities.
 	if (didCollide) {
-		removeDeadEntities(state);
 		didCollide = false;
+		removeDeadEntities(state);
+		updateUI(state, delta);
+		checkEndLevel(state);
 	}
 }
 
@@ -235,6 +237,7 @@ function loseLive(state: GameState) {
 	if (state.lives === 0) {
 		state.enemySpawns = [];
 		state.isGameOver = true;
+
 		showModal(
 			state,
 			`<h1>Game Over!</h1><p>Score: ${state.score}</p><p>Click to play again :)</p>`,
@@ -285,6 +288,7 @@ function checkEndLevel(state: GameState) {
 	state.level++;
 	state.enemySpawns = createLevel(state.level);
 	state.enemyCount = state.enemySpawns.length;
+	state.isGameInit = true;
 	if (state.levelBgEl) {
 		state.levelBgEl.style.opacity = levelBackgrounds[state.level];
 	}

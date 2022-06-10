@@ -25,6 +25,7 @@ export interface GameState {
 	score: number;
 	modalTime: number;
 	isGameOver: boolean;
+	isGameInit: boolean;
 }
 
 export type EnemyStyle = "Red" | "Green" | "Purple" | "Blue";
