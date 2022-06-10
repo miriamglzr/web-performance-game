@@ -35,8 +35,11 @@ export function update(state: GameState, updateTime: number) {
 	checkCollisions(state, delta);
 
 	// Update some misc UI elements.
-	if (state.isGameInit || (state.isGameOver && state.modalTime <= 0)) {
-		updateUI(state, delta);
+
+	updateUI(state, delta);
+
+	if (state.isGameInit || state.isGameOver) {
+		updateInfo(state, delta);
 		state.isGameInit = false;
 	}
 }
@@ -161,7 +164,7 @@ function checkCollisions(state: GameState, delta: number) {
 		if (outsideBounds) {
 			if (entityA.type === "enemy") {
 				// Oh no!
-				loseLive(state);
+				loseLive(state, delta);
 			} else {
 				// Basically a shot hitting the edge... Nothing dramatic.
 				killEntity(entityA);
@@ -199,20 +202,21 @@ function checkCollisions(state: GameState, delta: number) {
 	if (didCollide) {
 		didCollide = false;
 
-		updateUI(state, delta);
+		updateInfo(state, delta);
 		checkEndLevel(state);
 	}
 }
-
-/**
- * Update misc UI elements.
- */
-function updateUI(state: GameState, delta: number) {
+function updateInfo(state: GameState, delta: number) {
 	// Update the gameplay status UI.
 	if (state.statusEl) {
 		state.statusEl.innerText = `Level: ${state.level}\nLives: ${state.lives}\nScore: ${state.score}`;
 	}
-
+	updateUI(state, delta);
+}
+/**
+ * Update misc UI elements.
+ */
+function updateUI(state: GameState, delta: number) {
 	// Show and hide the modal.
 	if (state.modalEl) {
 		state.modalEl.style.opacity = state.modalTime ? "1" : "0";
@@ -229,9 +233,10 @@ function updateUI(state: GameState, delta: number) {
  * Oh no, an enemy has hit the bottom of the screen.
  * @param state
  */
-function loseLive(state: GameState) {
+function loseLive(state: GameState, delta: number) {
 	// A life has been lost. :(
 	state.lives--;
+	updateInfo(state, delta);
 
 	// Maybe even game over?
 	if (state.lives === 0) {
@@ -284,7 +289,7 @@ function checkEndLevel(state: GameState) {
 	killAllEntities(state);
 	state.score += bonus;
 	state.shotCount = 0;
-
+	console.log(state);
 	// Load the next level.
 	state.level++;
 	state.enemySpawns = createLevel(state.level);
