@@ -1,7 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
-import { PhoneNumber, PhoneNumberUtil } from "google-libphonenumber";
+import { validatePhoneNumber, preloadValidation } from "./utils";
 import DatePicker from "react-datepicker";
-import { useState } from "react";
 
 import "react-datepicker/dist/react-datepicker.css";
 import s from "./Form.module.css";
@@ -17,20 +16,7 @@ function daysUntilBirthday(date: Date) {
 	return m2.diff(today, "days");
 }
 
-async function validatePhoneNumber(value: string) {
-	console.log(value);
-	await import("google-libphonenumber").then(() => console.log(value));
-	const instance = PhoneNumberUtil.getInstance();
-	try {
-		const phoneNumber = instance.parseAndKeepRawInput(value, "IS");
-		return instance.isValidNumberForRegion(phoneNumber as PhoneNumber, "IS");
-	} catch (e) {
-		return false;
-	}
-}
-
 export const Form = () => {
-	const [importedLibrary, setImportedLibrary] = useState(false);
 	const {
 		register,
 		control,
@@ -41,16 +27,6 @@ export const Form = () => {
 
 	const birthday = watch("birthday");
 	const onSubmit = handleSubmit((data: any) => console.log(data));
-
-	// let phoneNumberPromise = null
-	// function getLibPhoneNumber() {
-	//   if (!phoneNumberPromise) {
-	//     phoneNumberPromise = import('google-libphonenumber').then((lib) =>
-	//       lib.PhoneNumberUtil.getInstance()
-	//     )
-	//   }
-	//   return phoneNumberPromise
-	// }
 
 	return (
 		<section className={s.form}>
@@ -80,7 +56,7 @@ export const Form = () => {
 				<div>
 					<label>Phone number</label>
 					<input
-						onFocus={(event) => validatePhoneNumber(event.target.value)}
+						onFocus={preloadValidation}
 						className={s.input}
 						type="tel"
 						{...register("phoneNumber", {

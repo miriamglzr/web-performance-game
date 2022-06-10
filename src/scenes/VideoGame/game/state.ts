@@ -5,7 +5,7 @@ import { Entity, GameState } from "./types";
  * Create the initial game state.
  */
 export const initialState = (): GameState => {
-	const level = 1;
+	const level = 6;
 	const enemySpawns = createLevel(level);
 	return {
 		entityContainerEl: null,

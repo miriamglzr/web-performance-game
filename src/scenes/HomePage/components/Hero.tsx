@@ -9,6 +9,8 @@ export const Hero = () => {
 				className={s.image}
 				src="bg.jpg"
 				alt=""
+				width="1270"
+				height="500"
 			/>
 			<div className={s.center}>
 				<h1 className={s.title}>Star fighter</h1>
