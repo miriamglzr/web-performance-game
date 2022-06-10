@@ -35,6 +35,7 @@ export function update(state: GameState, updateTime: number) {
 	checkCollisions(state);
 
 	// Update some misc UI elements.
+
 	updateUI(state, delta);
 }
 
@@ -90,9 +91,6 @@ function updateEntities(state: GameState, updateTime: number, delta: number) {
 			};
 			entity.x = newPos.x;
 			entity.y = newPos.y;
-			//	console.log(entity.x);
-			// entity.el.style.left = `${newPos.x}px`;
-			// entity.el.style.top = `${newPos.y}px`;
 			entity.el.style.transform = `translate(${newPos.x}px, ${newPos.y}px)`;
 		} else if (entity.type === "enemy") {
 			// Enemies move differently based on their variant.
@@ -104,9 +102,6 @@ function updateEntities(state: GameState, updateTime: number, delta: number) {
 					//parseFloat(prevStyles.top) +
 					entity.y + windowHeight * entity.enemySpawn.speed * delta;
 				entity.y = newY;
-				//	entity.el.style.top = `${newY}px`;
-
-				//	entity.el.style.transform = `translateY(${newY}px)`;
 			}
 
 			// Additionally, "sine" enemies move in a sine wave pattern.
@@ -118,8 +113,6 @@ function updateEntities(state: GameState, updateTime: number, delta: number) {
 					) *
 						entity.enemySpawn.sineRadius;
 				entity.x = newX;
-				// entity.el.style.left = `${newX}px`;
-				//	entity.el.style.transform = `translateX(${newX}px)`;
 			}
 
 			// Finally, "snake" enemies move according to predefined lines across the screen.
@@ -141,7 +134,10 @@ function updateEntities(state: GameState, updateTime: number, delta: number) {
  * Collision detection. How fun!
  */
 function checkCollisions(state: GameState) {
+	const windowHeight = window.innerHeight;
+	const windowWidth = window.innerWidth;
 	let didCollide = false;
+
 	state.entities.forEach((entityA) => {
 		// Ignore "dead" entities ... (we'll clean them up right after).
 		if (entityA.dead) {
@@ -153,12 +149,12 @@ function checkCollisions(state: GameState) {
 		const outsideBounds =
 			entityA.type === "shot"
 				? // Shots collide with all boundaries.
-				  rectA.top > window.innerHeight ||
+				  rectA.top > windowHeight ||
 				  rectA.bottom < 0 ||
-				  rectA.left > window.innerWidth ||
+				  rectA.left > windowWidth ||
 				  rectA.right < 0
 				: // Enemies only collide with bottom of screen.
-				  rectA.top > window.innerHeight;
+				  rectA.top > windowHeight;
 
 		if (outsideBounds) {
 			if (entityA.type === "enemy") {
@@ -290,7 +286,7 @@ function checkEndLevel(state: GameState) {
 	state.enemySpawns = createLevel(state.level);
 	state.enemyCount = state.enemySpawns.length;
 	if (state.levelBgEl) {
-		state.levelBgEl.style.backgroundColor = levelBackgrounds[state.level];
+		state.levelBgEl.style.opacity = levelBackgrounds[state.level];
 	}
 
 	// Or end the game.
