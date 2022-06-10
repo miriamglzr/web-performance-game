@@ -3,7 +3,7 @@ import { useRef, MouseEvent } from "react";
 import s from "./ui/styles.module.css";
 import { initialState } from "./game/state";
 import { onMouseClick, onMouseMove } from "./game/actions";
-import { update } from "./game/gameplay";
+import { moveCar, update } from "./game/gameplay";
 import useKeypress from "./game/useKeypress";
 
 export default () => {
@@ -27,10 +27,10 @@ export default () => {
 
 	const checkKey = (key: string) => {
 		if (key === "ArrowLeft") {
-			onMouseClick(gameState.current);
+			moveCar(gameState.current, key);
 		}
 		if (key === "ArrowRight") {
-			onMouseClick(gameState.current);
+			moveCar(gameState.current, key);
 		}
 		if (key === " ") {
 			onMouseClick(gameState.current);
@@ -43,7 +43,7 @@ export default () => {
 				className={s.levelBg}
 				ref={(el) => (gameState.current.levelBgEl = el)}
 			/>
-			<div className={s.turret}>
+			<div className={s.turret} ref={(el) => (gameState.current.turretEl = el)}>
 				<div
 					className={s.barrel}
 					ref={(el) => (gameState.current.barrelEl = el)}

@@ -30,9 +30,12 @@ export function createEnemy(enemySpawn: EnemySpawn, spawnTime: number): Entity {
 /**
  * Create a shot element and metadata.
  */
-export function createShot(barrelAngle: number): Entity {
+export function createShot(
+	barrelAngle: number,
+	turretEl: HTMLElement | null
+): Entity {
 	let { x, y } = getBarrelPosition();
-	x += barrelLength * Math.cos(barrelAngle);
+	x = turretEl!.offsetLeft + barrelLength * Math.cos(barrelAngle) + 40;
 	y += barrelLength * Math.sin(barrelAngle);
 	const velocity = {
 		x: window.innerHeight * shotVelocity * Math.cos(barrelAngle),

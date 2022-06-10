@@ -13,6 +13,7 @@ export const initialState = (): GameState => {
 		statusEl: null,
 		modalEl: null,
 		levelBgEl: null,
+		turretEl: null,
 		barrelAngle: 0,
 		entities: [],
 		lastUpdateTime: 0,

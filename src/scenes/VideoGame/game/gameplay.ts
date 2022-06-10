@@ -43,7 +43,7 @@ export function update(state: GameState, updateTime: number) {
 		state.isGameInit = false;
 	}
 
-	moveCar(state, delta);
+	//	moveCar(state);
 }
 
 /**
@@ -322,9 +322,25 @@ function showModal(state: GameState, html: string, time = 5) {
 	state.modalTime = time;
 }
 
-function moveCar(state: GameState, delta: number) {
+export function moveCar(state: GameState, key: string) {
 	const windowWidth = window.innerWidth;
-	const car = state.barrelEl;
-	//	console.log(car);
-	//useKeypress
+	const car = state.turretEl;
+	console.log(key);
+	if (car) {
+		console.log(car.style.left);
+		if (key === "ArrowLeft") {
+			car.style.left = `${Math.max(
+				0,
+				parseInt(car.style.left || "0", 10) - 10
+			)}px`;
+		}
+		if (key === "ArrowRight") {
+			car.style.left = `${Math.min(
+				windowWidth - car.clientWidth,
+				parseInt(car.style.left || "0", 10) + 10
+			)}px`;
+		}
+	}
+
+	//car.style.transform = `translateX(${state.carX}px)`;
 }

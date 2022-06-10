@@ -13,6 +13,7 @@ export interface GameState {
 	statusEl: HTMLElement | null;
 	modalEl: HTMLElement | null;
 	levelBgEl: HTMLElement | null;
+	turretEl: HTMLElement | null;
 	barrelAngle: number;
 	entities: Entity[];
 	lastUpdateTime: number;
