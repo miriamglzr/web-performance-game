@@ -38,10 +38,12 @@ export function update(state: GameState, updateTime: number) {
 
 	updateUI(state, delta);
 
-	if (state.isGameInit || state.isGameOver) {
+	if (state.isGameInit) {
 		updateInfo(state, delta);
 		state.isGameInit = false;
 	}
+
+	moveCar(state, delta);
 }
 
 /**
@@ -318,4 +320,11 @@ function showModal(state: GameState, html: string, time = 5) {
 		state.modalEl.innerHTML = html;
 	}
 	state.modalTime = time;
+}
+
+function moveCar(state: GameState, delta: number) {
+	const windowWidth = window.innerWidth;
+	const car = state.barrelEl;
+	//	console.log(car);
+	//useKeypress
 }
