@@ -291,7 +291,7 @@ function checkEndLevel(state: GameState) {
 	killAllEntities(state);
 	state.score += bonus;
 	state.shotCount = 0;
-	console.log(state);
+
 	// Load the next level.
 	state.level++;
 	state.enemySpawns = createLevel(state.level);
@@ -325,22 +325,18 @@ function showModal(state: GameState, html: string, time = 5) {
 export function moveCar(state: GameState, key: string) {
 	const windowWidth = window.innerWidth;
 	const car = state.turretEl;
-	console.log(key);
+
 	if (car) {
-		console.log(car.style.left);
+		let x;
 		if (key === "ArrowLeft") {
-			car.style.left = `${Math.max(
-				0,
-				parseInt(car.style.left || "0", 10) - 10
-			)}px`;
+			x = Math.max(0, parseInt(car.style.left || "0", 10) - 10);
 		}
 		if (key === "ArrowRight") {
-			car.style.left = `${Math.min(
+			x = Math.min(
 				windowWidth - car.clientWidth,
 				parseInt(car.style.left || "0", 10) + 10
-			)}px`;
+			);
 		}
+		car.style.transform = `translateX(${x}px)`;
 	}
-
-	//car.style.transform = `translateX(${state.carX}px)`;
 }
